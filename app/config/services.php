@@ -34,5 +34,8 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-
+    'facial' => [
+        'url'       => env('FACIAL_SERVICE_URL', 'http://localhost:5001'),
+        'threshold' => env('FACIAL_SERVICE_THRESHOLD', 0.6),
+    ],
 ];

@@ -1,13 +1,14 @@
-
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Chat from '@/Components/Chat';
+import EmotionTracker from '@/Components/EmotionTracker';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
 
 export default function Play({ game }) {
     const { auth } = usePage().props;
-    const [sessionId, setSessionId] = useState(null);
-    const [status, setStatus] = useState('idle');
+    const [sessionId, setSessionId]   = useState(null);
+    const [status, setStatus]         = useState('idle');
+    const [startedAt, setStartedAt]   = useState(null);
     const startedRef = useRef(false);
 
     function getCsrf() {
@@ -38,6 +39,7 @@ export default function Play({ game }) {
             if (!res.ok) throw new Error();
             const data = await res.json();
             setSessionId(data.session_id);
+            setStartedAt(Date.now());
             setStatus('playing');
         } catch {
             setStatus('error');
@@ -89,8 +91,9 @@ export default function Play({ game }) {
                     </div>
                 </div>
 
-                {/* Layout juego + chat */}
+                {/* Layout: juego + sidebar (chat + emociones) */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4" style={{ height: '75vh' }}>
+
                     {/* Iframe del juego */}
                     <div className="lg:col-span-2 bg-[#16161f] border border-white/5 rounded-2xl overflow-hidden">
                         {status === 'error' ? (
@@ -117,9 +120,23 @@ export default function Play({ game }) {
                         )}
                     </div>
 
-                    {/* Chat */}
-                    <div className="lg:col-span-1">
-                        <Chat gameId={game.id} />
+                    {/* Sidebar: Chat + EmotionTracker */}
+                    <div className="lg:col-span-1 flex flex-col gap-3">
+                        {/* Detector de emociones — solo activo cuando hay sesión */}
+                        {status === 'playing' && sessionId && (
+                            <div className="bg-[#16161f] border border-white/5 rounded-2xl p-4">
+                                <p className="text-xs text-white/30 mb-2 uppercase tracking-wider">Estado emocional</p>
+                                <EmotionTracker
+                                    sessionId={sessionId}
+                                    startedAt={startedAt}
+                                />
+                            </div>
+                        )}
+
+                        {/* Chat en tiempo real */}
+                        <div className="flex-1 min-h-0">
+                            <Chat gameId={game.id} />
+                        </div>
                     </div>
                 </div>
             </div>

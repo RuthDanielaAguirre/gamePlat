@@ -24,6 +24,17 @@ services:
     networks:
       - gameplat_network
 
+  facial-api:
+    build:
+      context: ./microservicio-facial
+      dockerfile: Dockerfile
+    container_name: gameplat_facial
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    networks:
+      - gameplat_network
+
 networks:
   gameplat_network:
     driver: bridge

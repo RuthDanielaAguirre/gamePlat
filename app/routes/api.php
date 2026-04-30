@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\GameApiController;
 use App\Http\Controllers\Api\MessageController;
+use App\Http\Controllers\Api\EmotionController;
 use App\Http\Middleware\CheckRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,9 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/sessions',                [GameApiController::class, 'mySessions']);
     });
 
-    Route::get('/chat/{gameId?}',  [MessageController::class, 'index']);
-    Route::post('/chat',           [MessageController::class, 'store']);
+    Route::get('/chat/{gameId?}',      [MessageController::class, 'index']);
+    Route::post('/chat',               [MessageController::class, 'store']);
+
+    Route::post('/emotions',           [EmotionController::class, 'store']);
+    Route::get('/emotions/{session}',  [EmotionController::class, 'index']);
 });

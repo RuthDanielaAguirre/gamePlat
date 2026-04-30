@@ -3,6 +3,7 @@
 use App\Http\Controllers\Web\GameController;
 use App\Http\Controllers\Web\PlayerController;
 use App\Http\Controllers\Web\UserController;
+use App\Http\Controllers\Web\FacialController;
 use App\Http\Middleware\CheckRole;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -53,6 +54,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/games/{game}', [PlayerController::class, 'play'])->name('play');
             Route::get('/results',      [PlayerController::class, 'results'])->name('results');
         });
+
+    Route::get('/security',          [FacialController::class, 'enrollForm'])->name('security.enroll');
+    Route::post('/security/enroll',  [FacialController::class, 'enroll'])->name('security.enroll.store');
+    Route::get('/verify-face',       [FacialController::class, 'verifyForm'])->name('security.verify');
+    Route::post('/verify-face',      [FacialController::class, 'verify'])->name('security.verify.store');
 });
 
 require __DIR__ . '/auth.php';
